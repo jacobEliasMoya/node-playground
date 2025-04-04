@@ -1,5 +1,6 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import posts from './routes/posts.js';
 const port = process.env.PORT || 8000
 
 const app = express();
@@ -19,22 +20,8 @@ const app = express();
 //     res.send(`searched for: ${req.query.term} `);
 // });
 
-let posts = [ 
-    {id:1, title:'post-1'},
-    {id:2, title:'post-2'},
-    {id:3, title:'post-3'},
-]
+app.use('/api/posts',posts)
 
-// get all posts
-app.get('/api/posts',(req,res)=>{
-    res.json(posts)
-})
-
-// get single posts
-app.get('/api/posts/:id',(req,res)=>{
-    const id = parseInt(req.params.id);
-    res.json(posts.filter((post) => post.id === id ));
-})
 
 app.listen(8001,()=> console.log(`servers working on port ${port}`))
 
