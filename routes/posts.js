@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express.Router();
+import { Filter } from 'bad-words';
 
 let posts = [
     { id: 1, title: 'post-1' },
@@ -7,8 +8,10 @@ let posts = [
     { id: 3, title: 'post-3' },
 ]
 
-const checkTitle = (string) => {
-    console.log(`hmmm this title: ${string} is interesting `)
+const filter = new Filter({placeHolder:'#@!'});
+
+const profanityCheck = (string) => {
+    console.log(filter.clean(`Woah, the word: ${string} is not cool man `))
 }
 
 // get all posts
@@ -49,9 +52,9 @@ router.post('/', (req, res) => {
         return res.status(400).json({ message: 'please include a title' })
     }
 
-    checkTitle(newPost.title)
+    profanityCheck(newPost.title)
+    res.status(201).json(newPost)
 
-    posts.push(newPost)
 });
 
 export default router;
