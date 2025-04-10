@@ -1,18 +1,12 @@
 import express from 'express';
+import profanityCheck from './middleware/profanityCheck.js';
 const router = express.Router();
-import { Filter } from 'bad-words';
 
 let posts = [
     { id: 1, title: 'post-1' },
     { id: 2, title: 'post-2' },
     { id: 3, title: 'post-3' },
 ]
-
-const filter = new Filter({placeHolder:'#@!'});
-
-const profanityCheck = (string) => {
-    console.log(filter.clean(`Woah, the word: ${string} is not cool man `))
-}
 
 // get all posts
 router.get('/', (req, res) => {
@@ -28,7 +22,7 @@ router.get('/', (req, res) => {
 })
 
 // get single post
-router.get('/:id', (req, res) => {
+router.get('/:id',(req, res) => {
 
     const id = parseInt(req.params.id);
     const post = posts.find((post) => post.id === id);
@@ -36,24 +30,19 @@ router.get('/:id', (req, res) => {
     if (!post) {
         return res.status(404).json({ msg: `a post with the id:${id} was not found` });
     }
-    res.status(200).json(post)
+    res.status(200).json()
 
 })
 
 // create new post
-router.post('/', (req, res) => {
+router.post('/', profanityCheck, (req, res) => {
 
     const newPost = {
-        id: posts.id + 1,
+        id: posts.length + 1,
         title: req.body.title
     };
 
-    if (!newPost.title) {
-        return res.status(400).json({ message: 'please include a title' })
-    }
-
-    profanityCheck(newPost.title)
-    res.status(201).json(newPost)
+    res.status(201).json({msg : `NOICE!! ${newPost}`})
 
 });
 
