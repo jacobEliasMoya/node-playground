@@ -1,12 +1,10 @@
 import express from 'express';
-import profanityCheck from './middleware/profanityCheck.js';
-const router = express.Router();
+import profanityCheck from '../middleware/profanityCheck.js';
+import {v4 as uuidv4} from 'uuid';
+import posts from './individualPosts.js';
+import checkDuplicateUsername from '../middleware/checkDuplicateUsername.js'
 
-let posts = [
-    { id: 1, title: 'post-1' },
-    { id: 2, title: 'post-2' },
-    { id: 3, title: 'post-3' },
-]
+const router = express.Router();
 
 // get all posts
 router.get('/', (req, res) => {
@@ -35,15 +33,19 @@ router.get('/:id',(req, res) => {
 })
 
 // create new post
-router.post('/', profanityCheck, (req, res) => {
+router.post('/', profanityCheck,checkDuplicateUsername(posts), (req, res) => {
 
     const newPost = {
-        id: posts.length + 1,
-        title: req.body.title
+        id: uuidv4(),
+        username: req.body.username
     };
 
-    res.status(201).json({msg : `NOICE!! ${newPost}`})
+    if(newPost.username){
+        posts.push(newPost)
+    } 
 
+    res.status(200).json(posts);
+    
 });
 
 export default router;

@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import posts from './routes/posts.js';
+import posts from './routes/posts/posts.js';
 const port = process.env.PORT || 8000
 
 const app = express();
@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 
-app.use('/api/posts',posts)
+app.use('/api/posts/',posts)
 
 
 app.listen(8001,()=> console.log(`servers working on port ${port}`))

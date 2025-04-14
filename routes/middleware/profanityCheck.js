@@ -3,17 +3,15 @@ const filter = new Filter();
 
 const profanityCheck = (req, res, next) => {
 
-    const title = req.body.title;
+    const username = req.body.username;
 
-    if (!title) {
-        return res.status(400).json({ message: 'please include a title' })
+    if (!username) {
+        return res.status(400).json({ message: 'please include a username' })
     }
 
-    if (filter.isProfane(title)) {
+    if (filter.isProfane(username)) {
         return res.status(400).json({ message: 'no bad words please' })
     }
-
-    console.log('dink')
 
     next();
 
